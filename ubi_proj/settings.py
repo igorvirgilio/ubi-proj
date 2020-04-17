@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'ubiwhere',
         'USER': 'ubi_user',
         'PASSWORD': 'ubi@123',
-        'HOST': '172.17.0.2',
+        'HOST': 'ubi_db',
         'PORT': '5432',
 
     }
