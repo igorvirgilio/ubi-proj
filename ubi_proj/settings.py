@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'ubiwhere',
         'USER': 'ubi_user',
-        'PASSWORD': '172.17.0.2',
+        'PASSWORD': 'ubi@123',
         'HOST': 'ubi_db',
         'PORT': '5432',
 

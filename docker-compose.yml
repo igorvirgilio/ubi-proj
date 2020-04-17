@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  ubi_restapi:
+    image: igorvirgilio/ubi_restapi:v3
+    container_name: ubi_restapi
+    volumes:
+      - ./Docker_restapi:/opt
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    networks: 
+      - ubi_net
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    networks: 
+      - ubi_net
+  
+  ubi_db:
+    image: igorvirgilio/ubi_db:v1
+    container_name: ubi_db
+    links: 
+      - postgres
+    volumes:
+      - ./Docker_db:/opt
+    ports:
+      - 5432:5432
+    networks: 
+      - ubi_net
+
+networks: 
+  ubi_net:
+
+
