@@ -2,7 +2,7 @@ version: '3'
 
 services:
   ubi_restapi:
-    image: igorvirgilio/ubi_restapi:v3
+    image: igorvirgilio/ubi_restapi:v4
     container_name: ubi_restapi
     volumes:
       - ./Docker_restapi:/opt
