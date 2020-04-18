@@ -24,9 +24,14 @@ A API REST deverá ainda permitir a filtragem das ocorrências por autor, por ca
 
 Segue os repositórios de imagem Docker Hub que possuem corelação com este repositório Git
 
+- https://hub.docker.com/r/igorvirgilio/ubi_db
+
 - https://hub.docker.com/r/igorvirgilio/ubi_restapi
 
-- https://hub.docker.com/r/igorvirgilio/ubi_db
+
+## Criação de ambiente
+
+Para subir todo o ambiente, execute em sua máquina local o ficheiro _**docker-compose.yml**_ disponibilizado neste repositório. Este ficheiro utilizá as imagens mencionadas na seção anterior. Após realizar o compose desse ambiente Docker será necessário seguir os passos descritos na seção _**Construção Docker**_ logo a seguir.
 
 ## Documentação utilizada
 
@@ -44,10 +49,13 @@ As documentações utilizadas foram:
 
 Os códigos foram implementados em ambiente virtual hospedado em Linux Ubuntu 18.04.
 
-Segue a lista dos itens que foram instalados na imagem **ubi_restapi**:
+Segue a lista dos itens que foram instalados na imagem **ubi_restapi**, que já esá preparada e formada com os passos descritos abaixo:
 
 
 ``` bash
+apt-get update
+apt-get upgrade -y
+
 apt-get install libpq-dev -y
 
 apt-get install python-dev -y 
@@ -87,8 +95,8 @@ Abaixo segue o Dockerfile na íntegra:
  ``` docker
 FROM python:3.6-buster
 
-RUN git clone https://github.com/igorvirgilio/Ubiwhere-igor.git
-WORKDIR /Ubiwhere-igor
+RUN git clone https://github.com/igorvirgilio/ubi-proj.git
+WORKDIR /ubi-proj
 COPY requirements.txt .
 
 RUN apt-get update &&\
@@ -119,12 +127,39 @@ services:
 
 Após configurar e fazer o depoly da Base de Dados e ter baixado a imagem *igorvirgilio/ubi_restapi* pode-se prosseguir para os passos de incialização do conteiner e em seguida os comandos para serem executados dentro da console do conteiner *ubi_restapi*
 
+## Utilização
+
+### Quando utilizado o docker-compose contido neste repositório, faça os comandos a seguir para inicializar a base de dados:
+Na console do conteiner vamos agora criar um utilizador e um DATABASE com os comandos as seguir:
+
+Depois de baixada a imagem localmente, basta executar os comandos:
+``` bash
+docker exec -it ubi_db /bin/bash
+```
+Após entrar na console Docker execute os comandos abaixo:
+``` bash
+sh -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres' 
+
+CREATE USER ubi_user WITH PASSWORD 'ubi@123';
+
+ALTER ROLE ubi_user WITH LOGIN;
+
+CREATE DATABASE ubi_proj WITH OWNER ubi_user;
+
+GRANT ALL PRIVILEGES ON DATABASE ubi_proj to ubi_user;
+
+ \c ubiwhere 
+
+create extension postgis;
+
+``` 
+
 ### Inicialização do conteiner *ubi_restapi*
 
 Para a incicialização do conteiner é sugerido o seguinte comando:
 *[link da imagem](https://hub.docker.com/r/igorvirgilio/ubi_restapi)*
 ``` bash
-docker run -it -p 8000:8000 --name ubi_restapi igorvirgilio/ubi_restapi:v1 /bin/bash
+docker exec -it ubi_restapi /bin/bash
 ``` 
 
 ### Comandos de preparação do ambiente
