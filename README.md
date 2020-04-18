@@ -132,6 +132,47 @@ services:
 Após ter executado o _**docker-compose.yml**_ e os conteiners estarem UP, basta acessá-los e realizar simples configurações 
 demonstradas a seguir.
 
+Abaixo seguem as instruções contidas no Docker Compose disponibilizado:
+``` docker
+version: '3'
+
+services:
+  ubi_restapi:
+    image: igorvirgilio/ubi_restapi:v4
+    container_name: ubi_restapi
+    volumes:
+      - ./Docker_restapi:/opt
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    networks: 
+      - ubi_net
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    networks: 
+      - ubi_net
+  
+  ubi_db:
+    image: igorvirgilio/ubi_db:v1
+    container_name: ubi_db
+    links: 
+      - postgres
+    volumes:
+      - ./Docker_db:/opt
+    ports:
+      - 5432:5432
+    networks: 
+      - ubi_net
+
+networks: 
+  ubi_net:
+```
+
+
+
 ### Utilização
 
 #### Quando utilizado o docker-compose contido neste repositório, faça os comandos a seguir para inicializar a base de dados:
